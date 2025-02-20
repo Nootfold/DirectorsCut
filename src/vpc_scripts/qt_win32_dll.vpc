@@ -1,0 +1,63 @@
+$Macro QT_ROOT    "$DIRECTORSCUT_SRCDIR\thirdparty\lgpl\qt"
+$Macro QT_MOC_DIR "$DIRECTORSCUT_SRCDIR\moc"
+$Include "$SRCDIR\vpc_scripts\source_dll_base.vpc"
+
+$Configuration
+{
+	$Compiler
+	{
+		$AdditionalIncludeDirectories	"$BASE;.\;$QT_ROOT\include;$QT_ROOT\include\QtCore;$QT_ROOT\include\QtGui;$QT_ROOT\include\QtWidgets;$QT_ROOT\include\QtUiTools;$QT_MOC_DIR"
+		$AdditionalIncludeDirectories	"$BASE;$QT_ROOT\include\QtGui\6.8.2\QtGui"
+		$PreprocessorDefinitions		"$BASE"
+	}
+
+	$Linker
+	{
+		// Link tier0 first because Qt needs our allocators during static object initization!
+		$AdditionalDependencies				"$BASE $LIBPUBLIC\tier0.lib"
+	}
+
+}
+
+$Project
+{
+
+	$Folder	"Qt UI Files"
+	{
+	}
+
+	$Folder "Link Libraries" [$QTDEBUG]
+	{
+		$Lib								"$QT_ROOT/lib/Qt6Cored"
+		$Lib								"$QT_ROOT/lib/Qt6Guid"
+		$Lib								"$QT_ROOT/lib/Qt6Widgetsd"
+	}
+	
+	$Folder "Link Libraries" [!$QTDEBUG]
+	{
+		$Lib								"$QT_ROOT/lib/Qt6Core"
+		$Lib								"$QT_ROOT/lib/Qt6Gui"
+		$Lib								"$QT_ROOT/lib/Qt6Widgets"
+	}
+}
+
+$CustomBuildStep "moc"
+//$PreBuildEvent
+{
+	$AdditionalDependencies "$(InputDir)$(InputName)"
+	$Description	"Running Qt moc on $(InputFileName)..."
+	$CommandLine	"if not exist $QT_MOC_DIR mkdir $QT_MOC_DIR "\n" \
+	" echo $QT_ROOT\bin\moc --compiler-flavor msvc -o $QT_MOC_DIR\$(InputFileName) $(InputDir)$(InputName) " "\n" \
+		" $QT_ROOT\bin\moc --compiler-flavor msvc -o $QT_MOC_DIR\$(InputFileName) $(InputDir)$(InputName)"
+	$Outputs	"$QT_MOC_DIR\$(InputFileName)"
+}
+
+$CustomBuildStep "windeployqt"
+//$PreBuildEvent
+{
+	$AdditionalDependencies "$(InputDir)$(InputName)"
+	$Description	"Deploying Qt Windows binaries to $(InputFileName)..."
+	$CommandLine	"if not exist $QT_WINDEPLOYQT_DIR mkdir $OUTBINDIR "\n" \
+	" echo $QT_ROOT\bin\windeployqt.exe $(InputDir)$(InputName) " "\n" \
+		" $QT_ROOT\bin\windeployqt.exe $(InputDir)$(InputName)"
+}

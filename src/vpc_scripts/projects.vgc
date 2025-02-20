@@ -1,0 +1,30 @@
+//-----------------------------------------------------------------------------
+//	PROJECTS.VGC
+//
+//	Project Configurations for all Source(TM) Projects
+//-----------------------------------------------------------------------------
+
+/////////////////////////
+// Project definitions //
+/////////////////////////
+
+$Project "mathlib"
+{
+	"mathlib\mathlib.vpc"
+}
+
+$Project "tier1"
+{
+	"tier1\tier1.vpc"
+}
+
+$Project "vgui_controls"
+{
+	"vgui2\vgui_controls\vgui_controls.vpc"
+}
+
+$Project "directorscut"
+{
+	"directorscut\directorscut.vpc"
+}
+
