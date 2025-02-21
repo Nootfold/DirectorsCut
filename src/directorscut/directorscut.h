@@ -1,16 +1,18 @@
 #pragma once
 
+#include <QApplication>
 #include "toolframework/itoolsystem.h"
 #include "tooldictionary.h"
-#include "soundinfo.h"
 #include "keyvalues.h"
-#include "cdll_int.h"
-#include <materialsystem/imaterialproxyfactory.h>
+#include "materialsystem/imaterialproxyfactory.h"
+#include "qt/qt_mainwindow.h"
 
-class DirectorsCutTool : public IToolSystem
+class CDirectorsCutTool : public IToolSystem
 {
 public:
-    DirectorsCutTool();
+    CDirectorsCutTool();
+
+    // Everything engine tools need to implement
     virtual const char* GetToolName();
     virtual bool Init();
     virtual void Shutdown();
@@ -55,4 +57,25 @@ public:
     virtual void VGui_PostRender(int paintMode);
     virtual void VGui_PreSimulate();
     virtual void VGui_PostSimulate();
+
+    // Our own methods
+    CQtMainWindow* GetMainWindow();
+
+    void SetToolActive(bool active);
+    void ToggleTool();
+    bool IsToolActive();
+
+    bool GetShouldHideEngineWindow();
+    void SetShouldHideEngineWindow(bool hide);
+    void HideOrShowEngineWindow(bool hide);
+protected:
+    QApplication* m_pApplication = nullptr;
+    CQtMainWindow* m_pMainWindow = nullptr;
+    
+    bool bIsToolActive = false;
+
+    bool bShouldHideEngineWindow = true;
+    bool bIsWindowHidden = false;
 };
+
+extern CDirectorsCutTool* g_pDirectorsCutTool;

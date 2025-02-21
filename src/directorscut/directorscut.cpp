@@ -1,235 +1,292 @@
-#include <QApplication>
 #include <QDir>
 #include <QFile>
-
-#include "app.h"
-
-#include "qt_ui/ui.h"
-
+#include <QMessageBox>
+#include <QString>
 #include "directorscut.h"
 
-QApplication* g_pDirectorsCutApp = nullptr;
-CMainWindow* m_pMainWindow;
+CDirectorsCutTool* g_pDirectorsCutTool = nullptr;
 
-// Currently blank, but might be worth filling in if you need mat proxies
-class CMaterialProxyFactory : public IMaterialProxyFactory
-{
-public:
-	virtual IMaterialProxy* CreateProxy(const char* proxyName) { return nullptr; }
-	virtual void DeleteProxy(IMaterialProxy* pProxy) { }
-};
-static CMaterialProxyFactory s_materialProxyFactory;
-
-
-DirectorsCutTool::DirectorsCutTool()
+CDirectorsCutTool::CDirectorsCutTool()
 {
 }
 
-const char *DirectorsCutTool::GetToolName()
+const char *CDirectorsCutTool::GetToolName()
 {
     return "Director's Cut";
 }
 
-bool DirectorsCutTool::Init()
+bool CDirectorsCutTool::Init()
 {
     return true;
 }
 
-bool DirectorsCutTool::ClientInit(CreateInterfaceFn clientFactory)
+bool CDirectorsCutTool::ClientInit(CreateInterfaceFn clientFactory)
 {
-    // get tool assets directory
-    QString dir = "bin/directorscut";
+    // Initialize library and search paths
+    #ifdef PLATFORM_64BITS
+    QString libraryPath = "bin/directorscut/x64";
+    #else
+    QString libraryPath = "bin/directorscut";
+    #endif
+    QCoreApplication::addLibraryPath(libraryPath);
+    QString searchPath = "bin/directorscut";
+    QDir::addSearchPath("tools", searchPath);
 
-    // set library paths
-    QCoreApplication::addLibraryPath(dir);
-
-    // define qdir!
-    QDir::addSearchPath("tools", dir);
-
-    // initialize QApplication and set it
-    // this is required because qt will shut down if there is no QApplication instance
+    // Create application
     int argc = 0;
-	g_pDirectorsCutApp = new QApplication(argc, nullptr);
-
-    // load dxfm.qss as the stylesheet
+    m_pApplication = new QApplication(argc, nullptr);
     QFile file("tools:stylesheets/directorscut.qss");
-    file.open(QFile::ReadOnly);
-    QString styleSheet = QLatin1String(file.readAll());
-    g_pDirectorsCutApp->setStyleSheet(styleSheet);
+    if (file.open(QFile::ReadOnly)) {
+        QString styleSheet = QLatin1String(file.readAll());
+        m_pApplication->setStyleSheet(styleSheet);
+    } else {
+        // User-friendly error message
+        QMessageBox::critical(nullptr, "Error", "Failed to load stylesheet. Director's Cut will use the default Qt stylesheet.");
+    }
+
+    // Create main window
+    m_pMainWindow = new CQtMainWindow(nullptr);
     return true;
 }
 
-void DirectorsCutTool::Shutdown()
+void CDirectorsCutTool::Shutdown()
 {
 }
 
-void DirectorsCutTool::OnToolActivate()
+void CDirectorsCutTool::OnToolActivate()
 {
-    if(!m_pMainWindow)
-        m_pMainWindow = new CMainWindow(nullptr);
-    m_pMainWindow->show();
+    SetToolActive(true);
 }
 
-void DirectorsCutTool::OnToolDeactivate()
+void CDirectorsCutTool::OnToolDeactivate()
 {
+    SetToolActive(false);
 }
 
-bool DirectorsCutTool::ServerInit(CreateInterfaceFn serverFactory) {
+bool CDirectorsCutTool::ServerInit(CreateInterfaceFn serverFactory) {
     return true;
 }
 
-void DirectorsCutTool::ServerShutdown()
+void CDirectorsCutTool::ServerShutdown()
 {
 }
 
-void DirectorsCutTool::ClientShutdown()
+void CDirectorsCutTool::ClientShutdown()
+{
+    // Destroy objects and shutdown Qt
+    delete m_pMainWindow;
+    delete m_pApplication;
+    m_pMainWindow = nullptr;
+    m_pApplication = nullptr;
+}
+
+bool CDirectorsCutTool::CanQuit() {
+    // TODO: Ask to save session document once implemented
+    // Only allow the tool to quit if no modal dialogs are open
+    return QApplication::activeModalWidget() == nullptr;
+}
+
+void CDirectorsCutTool::PostMessage(HTOOLHANDLE hEntity, KeyValues* message)
 {
 }
 
-bool DirectorsCutTool::CanQuit() {
-    return true;
-}
-
-void DirectorsCutTool::PostMessage(HTOOLHANDLE hEntity, KeyValues* message)
+void CDirectorsCutTool::Think(bool finalTick)
 {
 }
 
-void DirectorsCutTool::Think(bool finalTick)
+void CDirectorsCutTool::ServerLevelInitPreEntity()
 {
 }
 
-void DirectorsCutTool::ServerLevelInitPreEntity()
+void CDirectorsCutTool::ServerLevelInitPostEntity()
 {
 }
 
-void DirectorsCutTool::ServerLevelInitPostEntity()
+void CDirectorsCutTool::ServerLevelShutdownPreEntity()
 {
 }
 
-void DirectorsCutTool::ServerLevelShutdownPreEntity()
+void CDirectorsCutTool::ServerLevelShutdownPostEntity()
 {
 }
 
-void DirectorsCutTool::ServerLevelShutdownPostEntity()
+void CDirectorsCutTool::ServerFrameUpdatePreEntityThink()
 {
 }
 
-void DirectorsCutTool::ServerFrameUpdatePreEntityThink()
+void CDirectorsCutTool::ServerFrameUpdatePostEntityThink()
 {
 }
 
-void DirectorsCutTool::ServerFrameUpdatePostEntityThink()
+void CDirectorsCutTool::ServerPreClientUpdate()
 {
 }
 
-void DirectorsCutTool::ServerPreClientUpdate()
+void CDirectorsCutTool::ServerPreSetupVisibility()
 {
 }
 
-void DirectorsCutTool::ServerPreSetupVisibility()
-{
-}
-
-const char* DirectorsCutTool::GetEntityData(const char* pActualEntityData)
+const char* CDirectorsCutTool::GetEntityData(const char* pActualEntityData)
 {
     return pActualEntityData;
 }
 
-void DirectorsCutTool::ClientLevelInitPreEntity()
+void CDirectorsCutTool::ClientLevelInitPreEntity()
 {
 }
 
-void DirectorsCutTool::ClientLevelInitPostEntity()
+void CDirectorsCutTool::ClientLevelInitPostEntity()
 {
 }
 
-void DirectorsCutTool::ClientLevelShutdownPreEntity()
+void CDirectorsCutTool::ClientLevelShutdownPreEntity()
 {
 }
 
-void DirectorsCutTool::ClientLevelShutdownPostEntity()
+void CDirectorsCutTool::ClientLevelShutdownPostEntity()
 {
 }
 
-void DirectorsCutTool::ClientPreRender()
+void CDirectorsCutTool::ClientPreRender()
 {
 }
 
-void DirectorsCutTool::ClientPostRender()
+void CDirectorsCutTool::ClientPostRender()
 {
 }
 
-void DirectorsCutTool::AdjustEngineViewport(int &x, int &y, int &width, int &height)
+void CDirectorsCutTool::AdjustEngineViewport(int &x, int &y, int &width, int &height)
 {
 }
 
-bool DirectorsCutTool::SetupEngineView(Vector &origin, QAngle &angles, float &fov)
-{
-    return false;
-}
-
-bool DirectorsCutTool::SetupAudioState(AudioState_t &audioState)
+bool CDirectorsCutTool::SetupEngineView(Vector &origin, QAngle &angles, float &fov)
 {
     return false;
 }
 
-bool DirectorsCutTool::ShouldGameRenderView()
+bool CDirectorsCutTool::SetupAudioState(AudioState_t &audioState)
+{
+    return false;
+}
+
+bool CDirectorsCutTool::ShouldGameRenderView()
 {
     return true;
 }
 
-bool DirectorsCutTool::IsThirdPersonCamera() 
+bool CDirectorsCutTool::IsThirdPersonCamera() 
 {
     return false;
 }
 
-bool DirectorsCutTool::IsToolRecording()
+bool CDirectorsCutTool::IsToolRecording()
 {
     return false;
 }
 
-IMaterialProxy* DirectorsCutTool::LookupProxy(const char *proxyName)
+IMaterialProxy* CDirectorsCutTool::LookupProxy(const char *proxyName)
 {
     return NULL;
 }
 
-bool DirectorsCutTool::TrapKey(ButtonCode_t key, bool down) {
+bool CDirectorsCutTool::TrapKey(ButtonCode_t key, bool down) {
+    // Toggle tool when KEY_F11 is pressed
+    if (key == KEY_F11 && down) {
+        ToggleTool();
+        return true;
+    }
     return false;
 }
 
-bool DirectorsCutTool::GetSoundSpatialization(int iUserData, int guid, SpatializationInfo_t &info)
+bool CDirectorsCutTool::GetSoundSpatialization(int iUserData, int guid, SpatializationInfo_t &info)
 {
     return false;
 }
 
-void DirectorsCutTool::RenderFrameBegin()
+void CDirectorsCutTool::RenderFrameBegin()
 {
 }
 
-void DirectorsCutTool::RenderFrameEnd()
+void CDirectorsCutTool::RenderFrameEnd()
 {
 }
 
-void DirectorsCutTool::HostRunFrameBegin()
+void CDirectorsCutTool::HostRunFrameBegin()
 {
 }
 
-void DirectorsCutTool::HostRunFrameEnd()
+void CDirectorsCutTool::HostRunFrameEnd()
 {
 }
 
-void DirectorsCutTool::VGui_PreRender(int paintMode)
+void CDirectorsCutTool::VGui_PreRender(int paintMode)
 {
 }
 
-void DirectorsCutTool::VGui_PostRender(int paintMode)
+void CDirectorsCutTool::VGui_PostRender(int paintMode)
 {
 }
 
-void DirectorsCutTool::VGui_PreSimulate()
+void CDirectorsCutTool::VGui_PreSimulate()
 {
 }
 
-void DirectorsCutTool::VGui_PostSimulate()
+void CDirectorsCutTool::VGui_PostSimulate()
 {
+}
+
+// ===== Our own methods =====
+
+CQtMainWindow* CDirectorsCutTool::GetMainWindow()
+{
+    return m_pMainWindow;
+}
+
+void CDirectorsCutTool::SetToolActive(bool active)
+{
+    engine->ClientCmd_Unrestricted("stopsound");
+
+    bIsToolActive = active;
+
+    // show or hide game window
+    HideOrShowEngineWindow(active);
+
+    if(active)
+    {
+        engine->ClientCmd_Unrestricted("gameui_activate");
+        m_pMainWindow->show();
+        m_pMainWindow->activateWindow();
+    }
+    else
+    {
+        engine->ClientCmd_Unrestricted("gameui_hide");
+        m_pMainWindow->hide();
+    }
+}
+
+void CDirectorsCutTool::ToggleTool()
+{
+    SetToolActive(!bIsToolActive);
+}
+
+bool CDirectorsCutTool::IsToolActive()
+{
+    return bIsToolActive;
+}
+
+bool CDirectorsCutTool::GetShouldHideEngineWindow()
+{
+    return bShouldHideEngineWindow;
+}
+
+void CDirectorsCutTool::SetShouldHideEngineWindow(bool hide)
+{
+    bShouldHideEngineWindow = hide;
+}
+
+void CDirectorsCutTool::HideOrShowEngineWindow(bool hide)
+{
+    if(!bShouldHideEngineWindow)
+        hide = false;
+    bIsWindowHidden = hide;
 }

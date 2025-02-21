@@ -1,33 +1,50 @@
-#include "tooldictionary.h"
-
+#include <QString>
 #include "directorscut.h"
 
+// Tier0, Tier1, Tier2, Tier3
 #include "tier0/vprof.h"
-#include <KeyValues.h>
-#include "FileSystem.h"
-#include "matsys_controls/matsyscontrols.h"
-#include <tier3/tier3.h>
-#include "steam/steam_api.h"
-#include "datacache/idatacache.h"
-#include "engine/ienginesound.h"
-#include "igameuifuncs.h"
-#include "inputsystem/iinputsystem.h"
 #include "tier0/icommandline.h"
 
+#include <KeyValues.h>
+#include "FileSystem.h"
+
+#include "matsys_controls/matsyscontrols.h"
+
+#include <tier3/tier3.h>
+
+// Steam
+#include "steam/steam_api.h"
+
+// Data Cache
+#include "datacache/idatacache.h"
+
+// Engine
+#include "engine/ienginesound.h"
+
+// Game UI
+#include "igameuifuncs.h"
+
+// Input System
+#include "inputsystem/iinputsystem.h"
+
+// VGUI
 #include <vgui/isurface.h>
 #include <vgui/IVGui.h>
 #include <vgui/IInput.h>
 #include <vgui_controls/Panel.h>
 #include "vguimatsurface/IMatSystemSurface.h"
-#include "vgui/isystem.h"
+#include <vgui/isystem.h>
 #include <vgui/ILocalize.h>
 #include "vgui_controls/animationcontroller.h"
 #include <vgui_controls/Frame.h>
 #include <vgui/IInputInternal.h>
 #include <vgui_controls/Controls.h>
 
+#include "tooldictionary.h"
+
 using namespace vgui;
 
+// Interface pointers
 IVModelRender* modelrender = NULL;
 IDataCache* datacache = NULL;
 IVModelInfoClient* modelinfo = NULL;
@@ -44,7 +61,6 @@ ISoundEmitterSystemBase* soundemitterbase = NULL;
 static CGlobalVarsBase dummyvars(true);
 CGlobalVarsBase* gpGlobals = &dummyvars;
 CSysModule* ProcShaderModule = NULL;
-
 IVRenderView* render = NULL;
 IVEngineClient* engine = NULL;
 IEngineTool* enginetools = NULL;
@@ -58,9 +74,11 @@ bool CToolDictionary::Connect(CreateInterfaceFn factory)
     ConnectTier1Libraries(&factory, 1);
     ConnectTier2Libraries(&factory, 1);
     ConnectTier3Libraries(&factory, 1);
+
+    // Factories
     modelrender = (IVModelRender*)factory(VENGINE_HUDMODEL_INTERFACE_VERSION, NULL);
     if (!modelrender)
-		return false;
+        return false;
     datacache = (IDataCache*)factory(DATACACHE_INTERFACE_VERSION, NULL);
     if (!datacache)
         return false;
@@ -91,7 +109,7 @@ bool CToolDictionary::Connect(CreateInterfaceFn factory)
     inputsystem = (IInputSystem*)factory(INPUTSYSTEM_INTERFACE_VERSION, NULL);
     if (!inputsystem)
         return false;
-    if( !g_pMaterialSystemHardwareConfig )
+    if (!g_pMaterialSystemHardwareConfig)
         return false;
     render = (IVRenderView*)factory(VENGINE_RENDERVIEW_INTERFACE_VERSION, NULL);
     if (!render)
@@ -105,8 +123,12 @@ bool CToolDictionary::Connect(CreateInterfaceFn factory)
     enginetools = (IEngineTool*)factory(VENGINETOOL_INTERFACE_VERSION, NULL);
     if (!enginetools)
         return false;
-    s_GaussianRandomStream.AttachToStream( random );
-    ConVar_Register( FCVAR_CLIENTDLL );
+
+    // Other misc. interfaces
+    s_GaussianRandomStream.AttachToStream(random);
+    ConVar_Register(FCVAR_CLIENTDLL);
+
+    // VGUI
     if (!vgui::VGui_InitInterfacesList("directorscut", &factory, 1))
         return false;
     if (g_pVGuiSurface == NULL ||
@@ -120,21 +142,53 @@ bool CToolDictionary::Connect(CreateInterfaceFn factory)
         return false;
     if (!vgui::VGui_InitMatSysInterfacesList("directorscut", &factory, 1))
         return false;
+        
     return true;
 }
 
 void CToolDictionary::Disconnect()
 {
     // Disconnect all interfaces
-    g_pFullFileSystem = NULL;
     g_pMaterialSystem = NULL;
     g_pStudioRender = NULL;
-    g_pMDLCache = NULL;
+    mdlcache = NULL;
+    modelinfo = NULL;
+    datacache = NULL;
+    modelrender = NULL;
+    enginesound = NULL;
+    filesystem = NULL;
+    random = NULL;
+    gameuifuncs = NULL;
+    inputsystem = NULL;
+    g_pMaterialSystemHardwareConfig = NULL;
+    render = NULL;
+    engine = NULL;
+    enginevgui = NULL;
+    enginetools = NULL;
+
+    // Other misc. interfaces
+    ConVar_Unregister();
+    s_GaussianRandomStream = NULL;
+    if (ProcShaderModule)
+    {
+        Sys_UnloadModule(ProcShaderModule);
+        ProcShaderModule = NULL;
+    }
+
+    // VGUI
     if (g_pVGui)
     {
         g_pVGui->Shutdown();
         g_pVGui = NULL;
     }
+    g_pVGuiSurface = NULL;
+    g_pMatSystemSurface = NULL;
+    g_pVGuiInput = NULL;
+    g_pVGuiPanel = NULL;
+    g_pVGuiLocalize = NULL;
+    g_pVGuiSchemeManager = NULL;
+    g_pVGuiSystem = NULL;
+
     ConVar_Unregister();
     DisconnectTier3Libraries();
     DisconnectTier2Libraries();
@@ -154,11 +208,19 @@ InitReturnVal_t CToolDictionary::Init()
 
 void CToolDictionary::Shutdown()
 {
+    // Shutdown all tools
+    for (int i = 0; i < m_Tools.Count(); i++)
+    {
+        m_Tools[i]->Shutdown();
+    }
+    m_Tools.Purge();
 }
 
 void CToolDictionary::CreateTools()
 {
-    m_Tools.AddToTail(new DirectorsCutTool());
+    // Create all tools
+    g_pDirectorsCutTool = new CDirectorsCutTool();
+    m_Tools.AddToTail(g_pDirectorsCutTool);
 }
 
 int CToolDictionary::GetToolCount() const

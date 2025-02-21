@@ -8,7 +8,8 @@ $Macro SRCDIR "..\..\sdk\src"
 $Macro DIRECTORSCUT_SRCDIR ".."
 $Macro OUTBINNAME "directorscut"
 $Macro OUTBINDIR "..\..\game\bin\directorscut"
-$Macro QT_ROOT    "C:\Qt\6.8.2\msvc2022_64"
+
+$Macro QTDEBUG 1
 
 $Include "$DIRECTORSCUT_SRCDIR\vpc_scripts\qt_win32_dll.vpc"
 
@@ -19,9 +20,9 @@ $Configuration
 		$AdditionalIncludeDirectories	"$BASE;$SRCDIR\public;$SRCDIR\public\mathlib\$SRCDIR\public\tier0;$SRCDIR\public\tier1"
 
         // qt stuff
-        $AdditionalIncludeDirectories "$BASE;$DIRECTORSCUT_SRCDIR\tools\directorscut\dxfm\qt_ui"
+        $AdditionalIncludeDirectories "$BASE;$DIRECTORSCUT_SRCDIR\directorscut\qt"
         $AdditionalIncludeDirectories	"$BASE;.\;$QT_ROOT\include;$QT_ROOT\include\QtCore;$QT_ROOT\include\QtGui;$QT_ROOT\include\QtWidgets"
-		$AdditionalIncludeDirectories	"$BASE;$QT_ROOT\include\QtGui\6.8.2\QtGui"
+		$AdditionalIncludeDirectories	"$BASE;$QT_ROOT\include\QtGui\5.15.2\QtGui"
 		
 		$PreprocessorDefinitions			"$BASE;_CRT_NO_VA_START_VALIDATION;RAD_TELEMETRY_DISABLED;TF2_SDK;TF_CLIENT_DLL;GLOWS_ENABLE;USES_ECON_ITEMS;CE_DLL"
 		$PreprocessorDefinitions			"$BASE;_CRT_DECLARE_NONSTDC_NAMES=1;_CRT_NONSTDC_NO_DEPRECATE=1;QT_SHARED"
@@ -37,17 +38,17 @@ $Project "directorscut"
 {
 	$Folder	"Qt UI Files"
 	{
-		$File "qt_ui/aboutdialog.h"
-		$File "qt_ui/aboutdialog.cpp"
-		$DynamicFile "qt_ui/aboutdialog.h.moc"
-        
-		$File "qt_ui/ui.h"
-		$File "qt_ui/ui.cpp"
-		$DynamicFile "qt_ui/ui.h.moc"
+		$File "qt/qt_aboutdialog.h"
+		$File "qt/qt_aboutdialog.cpp"
+		$DynamicFile "qt/qt_aboutdialog.h.moc"
 
-		$File "qt_ui/matsyswindow.h"
-		$File "qt_ui/matsyswindow.cpp"
-		$DynamicFile "qt_ui/matsyswindow.h.moc"
+		$File "qt/qt_mainwindow_menubar.h"
+		$File "qt/qt_mainwindow_menubar.cpp"
+		$DynamicFile "qt/qt_mainwindow_menubar.h.moc"
+        
+		$File "qt/qt_mainwindow.h"
+		$File "qt/qt_mainwindow.cpp"
+		$DynamicFile "qt/qt_mainwindow.h.moc"
 	}
 
     $Folder "Source Files"
@@ -64,7 +65,6 @@ $Project "directorscut"
 
     $Folder "Public Header Files"
     {
-		$File "app.h"
         $File "directorscut.h"
         $File "tooldictionary.h"
     }

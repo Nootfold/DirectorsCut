@@ -1,0 +1,5 @@
+"enginetools"
+{
+	"library"	"../directorscut/x64/directorscut.dll"
+	"library"	"../tools/x64/pet.dll"
+}

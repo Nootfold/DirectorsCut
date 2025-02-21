@@ -503,6 +503,16 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 
+# Qt
+*.moc
+
 # Junctions
 /src/thirdparty/lgpl
 /src/devtools
+
+# Director's Cut
+!game/bin
+!game/bin/x64
+
+# VS Code
+.vscode/
