@@ -28,16 +28,21 @@ CQtMainWindow::CQtMainWindow(QWidget* pParent) : QMainWindow(pParent)
 	setCentralWidget(m_pMainWidget);
 }
 
+void CQtMainWindow::populateMenus()
+{
+	// Pass-through to menu bar
+	m_pMenuBar->populateMenus();
+}
+
 void CQtMainWindow::closeEvent(QCloseEvent* event)
 {
     if (g_pDirectorsCutTool->CanQuit())
     {
-        event->accept();
+		// Tool can quit, hide and prompt user in-engine
+		g_pDirectorsCutTool->ToggleTool();
+		engine->ClientCmd_Unrestricted("quit prompt");
     }
-    else
-    {
-        event->ignore();
-    }
+	event->ignore();
 }
 
 #include "qt_mainwindow.h.moc"

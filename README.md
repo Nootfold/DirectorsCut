@@ -35,23 +35,21 @@ Moderation: [Flynnyt03](https://github.com/flynnyt03), [nuppington](https://gith
 Director's Cut is built on the **Source SDK 2013 Multiplayer** codebase, which uses the **Team Fortress 2** branch of the **Source Engine**. The project is developed in **C++** using **Visual Studio 2022** and **Qt 5.15.2**.
 
 ### Pre-requisites
-The following software is required to build Director's Cut from source:
+Install the following software in order to build Director's Cut:
 
-- **Visual Studio 2022** with the following components:
-  - **Desktop development with C++**
-- **Qt 5.15.2 (MSVC 2019 64-bit)** installed to `C:\Qt\5.15.2\msvc2019_64`:
-  - Download the Windows x64 version of **Qt Community Edition** from [Qt's official website](https://www.qt.io/download-qt-installer-oss).
-  - Open the installer and log into your Qt account or create a new one.
-  - Toggle the **Archive** checkbox in the **Select Components** page.
-  - Expand the `Qt 5.15.2` section and select the following components:
+- [**Visual Studio 2022**](https://visualstudio.microsoft.com/vs/community/)
+  - Requires the **Desktop development with C++** workload.
+- [**Qt 5.15.2 (MSVC 2019 64-bit)**](https://www.qt.io/download-qt-installer-oss)
+  - Must be installed to `C:\Qt`.
+  - **Qt 5.15.2** is hidden under the **Archived** filter. Only select the following components:
     - **MSVC 2019 64-bit**
     - **Qt Debug Information Files**
-  - Install to `C:\Qt`.
-- **Steam** installed to `C:\Program Files (x86)\Steam`: 
-  - Download the [Steam installer](https://store.steampowered.com/about/).
-  - Install Steam to `C:\Program Files (x86)\Steam`.
-- **Source SDK Base 2013 Multiplayer** installed to `C:\Program Files (x86)\Steam\steamapps\common\Source SDK Base 2013 Multiplayer`:
-  - Open Steam and install **Source SDK Base 2013 Multiplayer** from the **Tools** section in the **Library**.
+
+To test Director's Cut once built, you'll need the following software installed:
+- [**Steam**](https://store.steampowered.com/about/)
+  - Must be installed to `C:\Program Files (x86)\Steam`.
+- **Source SDK Base 2013 Multiplayer**
+  - Must be installed in the default Steam library.
 
 These instructions are only relevant for **Windows**. If you are developing using **Linux** and would like to contribute, please consider making a [pull request](https://github.com/DirectorsCutMod/DirectorsCut/pulls) to update this section and any other relevant parts of the repository.
 
@@ -82,7 +80,7 @@ You'll need to build the SDK's binaries before you can run Director's Cut. To do
   - Press Ctrl+Shift+B in Visual Studio 2022 or click **Build > Build Solution** in the menu.
   - Building the SDK will take a very long time, so be patient.
 
-With the SDK and junctions ready, you can easily launch **Source SDK 2013 Multiplayer** under `mod_tf` (Frog Fortress 2) with `-tools` mode by running `src\startdirectorscut.bat`. Director's Cut will be loaded as an engine tool once the game is fully loaded.
+With the SDK ready, you can now test Director's Cut by running `src\startdirectorscut.bat`. This will create any necessary directory junctions and start the SDK in `-tools` mode.
 
 ## Attributions
 Director's Cut is licensed under the [Source 1 SDK License](LICENSE). See [thirdpartylegalnotices.txt](thirdpartylegalnotices.txt) for additional licensing information.

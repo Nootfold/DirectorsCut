@@ -74,8 +74,6 @@ public:
     virtual void CreateTools();
     virtual int GetToolCount() const;
     virtual IToolSystem* GetTool(int index);
-private:
-    CUtlVector<IToolSystem*> m_Tools;
 };
 
 static CToolDictionary g_ToolDictionary;

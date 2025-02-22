@@ -4,6 +4,9 @@
 
 CQtAboutDialog::CQtAboutDialog(QWidget* pParent) : QDialog(pParent)
 {
+    // set delete on close
+    setAttribute(Qt::WA_DeleteOnClose);
+
     // will be autosized on x later
     setFixedSize(500, 115);
     setWindowTitle("About Director's Cut [Pre-Alpha]");

@@ -22,6 +22,8 @@ bool CDirectorsCutTool::Init()
 
 bool CDirectorsCutTool::ClientInit(CreateInterfaceFn clientFactory)
 {
+    // Run on client init because we need to wait for engine to be initialized
+
     // Initialize library and search paths
     #ifdef PLATFORM_64BITS
     QString libraryPath = "bin/directorscut/x64";
@@ -46,11 +48,26 @@ bool CDirectorsCutTool::ClientInit(CreateInterfaceFn clientFactory)
 
     // Create main window
     m_pMainWindow = new CQtMainWindow(nullptr);
+    m_pMainWindow->populateMenus();
     return true;
 }
 
 void CDirectorsCutTool::Shutdown()
 {
+    // Destroy members and shut down Qt
+    SetToolActive(false);
+    if (m_pMainWindow)
+    {
+        m_pMainWindow->close();
+        delete m_pMainWindow;
+        m_pMainWindow = nullptr;
+    }
+    if (m_pApplication)
+    {
+        m_pApplication->quit();
+        delete m_pApplication;
+        m_pApplication = nullptr;
+    }
 }
 
 void CDirectorsCutTool::OnToolActivate()
@@ -73,11 +90,6 @@ void CDirectorsCutTool::ServerShutdown()
 
 void CDirectorsCutTool::ClientShutdown()
 {
-    // Destroy objects and shutdown Qt
-    delete m_pMainWindow;
-    delete m_pApplication;
-    m_pMainWindow = nullptr;
-    m_pApplication = nullptr;
 }
 
 bool CDirectorsCutTool::CanQuit() {

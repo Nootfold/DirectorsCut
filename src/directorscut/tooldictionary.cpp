@@ -208,31 +208,32 @@ InitReturnVal_t CToolDictionary::Init()
 
 void CToolDictionary::Shutdown()
 {
-    // Shutdown all tools
-    for (int i = 0; i < m_Tools.Count(); i++)
+    // Delete singleton instance if available
+    if (g_pDirectorsCutTool)
     {
-        m_Tools[i]->Shutdown();
+        delete g_pDirectorsCutTool;
+        g_pDirectorsCutTool = nullptr;
     }
-    m_Tools.Purge();
 }
 
 void CToolDictionary::CreateTools()
 {
-    // Create all tools
+    // Create Director's Cut singleton instance
     g_pDirectorsCutTool = new CDirectorsCutTool();
-    m_Tools.AddToTail(g_pDirectorsCutTool);
 }
 
 int CToolDictionary::GetToolCount() const
 {
-    return m_Tools.Count();
+    // Only one tool is available
+    return 1;
 }
 
 IToolSystem* CToolDictionary::GetTool(int index)
 {
-    if (index < 0 || index >= m_Tools.Count())
+    // No other tools are available, so return the Director's Cut tool
+    if (index == 0)
     {
-        return NULL;
+        return g_pDirectorsCutTool;
     }
-    return m_Tools[index];
+    return nullptr;
 }

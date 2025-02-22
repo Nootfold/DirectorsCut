@@ -10,6 +10,7 @@ class CQtMainWindow : public QMainWindow
 	Q_OBJECT
 public:
 	CQtMainWindow(QWidget* pParent);
+	void populateMenus();
 protected:
 	void closeEvent(QCloseEvent* event) override;
 	
