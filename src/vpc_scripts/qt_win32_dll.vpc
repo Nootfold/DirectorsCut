@@ -2,13 +2,15 @@ $Macro QT_ROOT    "$DIRECTORSCUT_SRCDIR\thirdparty\lgpl\qt"
 $Macro QT_MOC_DIR "$DIRECTORSCUT_SRCDIR\moc"
 $Macro QT_ROOT    "C:\Qt\5.15.2\msvc2019_64"
 
+$Macro QTDEBUG 1
+
 $Include "$SRCDIR\vpc_scripts\source_dll_base.vpc"
 
 $Configuration
 {
 	$Compiler
 	{
-		$AdditionalIncludeDirectories	"$BASE;.\;$QT_ROOT\include;$QT_ROOT\include\QtCore;$QT_ROOT\include\QtGui;$QT_ROOT\include\QtWidgets;$QT_ROOT\include\QtUiTools;$QT_MOC_DIR"
+		$AdditionalIncludeDirectories	"$BASE;.\;$QT_ROOT\include;$QT_ROOT\include\QtCore;$QT_ROOT\include\QtGui;$QT_ROOT\include\QtSvg;$QT_ROOT\include\QtWidgets;$QT_ROOT\include\QtUiTools;$QT_MOC_DIR"
 		$AdditionalIncludeDirectories	"$BASE;$QT_ROOT\include\QtGui\5.15.2\QtGui"
 		$PreprocessorDefinitions		"$BASE;QT_NO_DEBUG" [!$QTDEBUG]
 		$DisableSpecificWarnings			"4127;4512;$BASE"
@@ -23,17 +25,6 @@ $Configuration
 		$AdditionalDependencies				"$BASE $LIBPUBLIC\tier0.lib"
 	}
 
-    $CustomBuildStep
-    {
-        $AdditionalDependencies "$OUTBINDIR\$(TargetFileName)"
-        $Description	"Running windeployqt on $OUTBINDIR\$(TargetFileName)..."
-        $CommandLine	"echo $QT_ROOT\bin\windeployqt.exe --debug $OUTBINDIR\$(TargetFileName) " "\n" \
-            " $QT_ROOT\bin\windeployqt.exe --debug $OUTBINDIR\$(TargetFileName)" [$QTDEBUG]
-        $CommandLine	"echo $QT_ROOT\bin\windeployqt.exe --release $OUTBINDIR\$(TargetFileName) " "\n" \
-            " $QT_ROOT\bin\windeployqt.exe --release $OUTBINDIR\$(TargetFileName)" [!$QTDEBUG]
-        $Outputs	"$OUTBINDIR\D3Dcompiler_47.dll"
-    }
-
 }
 
 $Project
@@ -47,6 +38,7 @@ $Project
 	{
 		$Lib								"$QT_ROOT/lib/Qt5Cored"
 		$Lib								"$QT_ROOT/lib/Qt5Guid"
+		$Lib								"$QT_ROOT/lib/Qt5Svgd"
 		$Lib								"$QT_ROOT/lib/Qt5Widgetsd"
 	}
 	
@@ -54,6 +46,7 @@ $Project
 	{
 		$Lib								"$QT_ROOT/lib/Qt5Core"
 		$Lib								"$QT_ROOT/lib/Qt5Gui"
+		$Lib								"$QT_ROOT/lib/Qt5Svg"
 		$Lib								"$QT_ROOT/lib/Qt5Widgets"
 	}
 }

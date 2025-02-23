@@ -9,9 +9,8 @@ $Macro DIRECTORSCUT_SRCDIR ".."
 $Macro OUTBINNAME "directorscut"
 $Macro OUTBINDIR "..\..\game\bin\directorscut"
 
-$Macro QTDEBUG 1
-
 $Include "$DIRECTORSCUT_SRCDIR\vpc_scripts\qt_win32_dll.vpc"
+$Include "$DIRECTORSCUT_SRCDIR\directorscut\qt_advanced_docking_system.vpc"
 
 $Configuration
 {
@@ -21,8 +20,6 @@ $Configuration
 
         // qt stuff
         $AdditionalIncludeDirectories "$BASE;$DIRECTORSCUT_SRCDIR\directorscut\qt"
-        $AdditionalIncludeDirectories	"$BASE;.\;$QT_ROOT\include;$QT_ROOT\include\QtCore;$QT_ROOT\include\QtGui;$QT_ROOT\include\QtWidgets"
-		$AdditionalIncludeDirectories	"$BASE;$QT_ROOT\include\QtGui\5.15.2\QtGui"
 		
 		$PreprocessorDefinitions			"$BASE;_CRT_NO_VA_START_VALIDATION;RAD_TELEMETRY_DISABLED;TF2_SDK;TF_CLIENT_DLL;GLOWS_ENABLE;USES_ECON_ITEMS;CE_DLL"
 		$PreprocessorDefinitions			"$BASE;_CRT_DECLARE_NONSTDC_NAMES=1;_CRT_NONSTDC_NO_DEPRECATE=1;QT_SHARED"
@@ -38,21 +35,32 @@ $Project "directorscut"
 {
 	$Folder	"Qt UI Files"
 	{
-		$File "qt/qt_aboutdialog.h"
-		$File "qt/qt_aboutdialog.cpp"
-		$DynamicFile "qt/qt_aboutdialog.h.moc"
+		$Folder "Main Window"
+		{
+			$File "qt/mainwindow/qt_aboutdialog.h"
+			$File "qt/mainwindow/qt_aboutdialog.cpp"
+			$DynamicFile "qt/mainwindow/qt_aboutdialog.h.moc"
 
-		$File "qt/qt_mainwindow_menubar.h"
-		$File "qt/qt_mainwindow_menubar.cpp"
-		$DynamicFile "qt/qt_mainwindow_menubar.h.moc"
-        
-		$File "qt/qt_mainwindow.h"
-		$File "qt/qt_mainwindow.cpp"
-		$DynamicFile "qt/qt_mainwindow.h.moc"
+			$File "qt/mainwindow/qt_mainwindow_menubar.h"
+			$File "qt/mainwindow/qt_mainwindow_menubar.cpp"
+			$DynamicFile "qt/mainwindow/qt_mainwindow_menubar.h.moc"
+			
+			$File "qt/mainwindow/qt_mainwindow.h"
+			$File "qt/mainwindow/qt_mainwindow.cpp"
+			$DynamicFile "qt/mainwindow/qt_mainwindow.h.moc"
+		}
+	
+		$File "qt/directorscut_qt.h"
+		$File "qt/directorscut_qt.cpp"
 	}
 
     $Folder "Source Files"
     {
+        $Folder "Metadata"
+        {
+			$File "version.h"
+			$File "contributors.h"
+		}
         $File "directorscut.cpp"
         $File "tooldictionary.cpp"
 

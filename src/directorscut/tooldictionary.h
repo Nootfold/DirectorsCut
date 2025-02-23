@@ -7,11 +7,9 @@
 #include "interface.h"
 #include "toolframework/ienginetool.h"
 #include "ienginevgui.h"
-#include "interface.h"
 #include "vgui/VGUI.h"
 
 #include "utllinkedlist.h"
-#include "cdll_int.h"
 #include "eiface.h"
 #include <soundflags.h>
 #include "mathlib/vector.h"

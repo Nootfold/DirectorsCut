@@ -1,11 +1,16 @@
 #pragma once
 
-#include <QApplication>
+#include "metadata/version.h"
+#include "metadata/contributors.h"
+
+#define DIRECTORSCUT_PRODUCTNAME "Director's Cut"
+#define DIRECTORSCUT_AUTHOR DIRECTORSCUT_PRODUCTNAME " Contributors"
+
 #include "toolframework/itoolsystem.h"
 #include "tooldictionary.h"
 #include "keyvalues.h"
 #include "materialsystem/imaterialproxyfactory.h"
-#include "qt/qt_mainwindow.h"
+#include "qt/directorscut_qt.h"
 
 class CDirectorsCutTool : public IToolSystem
 {
@@ -59,7 +64,7 @@ public:
     virtual void VGui_PostSimulate();
 
     // Our own methods
-    CQtMainWindow* GetMainWindow();
+    CDirectorsCutQt* Qt();
 
     void SetToolActive(bool active);
     void ToggleTool();
@@ -68,14 +73,16 @@ public:
     bool GetShouldHideEngineWindow();
     void SetShouldHideEngineWindow(bool hide);
     void HideOrShowEngineWindow(bool hide);
+    void* GetEngineWindowHandle();
+    void FocusEngineWindow();
 protected:
-    QApplication* m_pApplication = nullptr;
-    CQtMainWindow* m_pMainWindow = nullptr;
-    
-    bool bIsToolActive = false;
+    CDirectorsCutQt* m_pQt = nullptr;
 
-    bool bShouldHideEngineWindow = true;
-    bool bIsWindowHidden = false;
+    bool m_bIsToolActive = false;
+    bool m_bShouldHideEngineWindow = true;
+    bool m_bIsWindowHidden = false;
+    
+    void* pHWND = (void*)0xFFEEFFEE; // HWND, windows.h isn't included here
 };
 
 extern CDirectorsCutTool* g_pDirectorsCutTool;

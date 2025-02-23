@@ -1,4 +1,5 @@
 #include <QApplication>
+#include <QtWidgets/QAction>
 #include "tooldictionary.h"
 #include "directorscut.h"
 #include "qt_mainwindow_menubar.h"
@@ -548,7 +549,7 @@ void CQtMainWindowMenuBar::onMenuViewAboutToShow()
 
 	QAction* actionShow_Fullscreen = new QAction("Show Fullscreen", this);
 	// If the main window is in fullscreen mode, change the text to "Show Normal"
-	if (g_pDirectorsCutTool->GetMainWindow()->windowState() & Qt::WindowFullScreen)
+	if (g_pDirectorsCutTool->Qt()->GetMainWindow()->windowState() & Qt::WindowFullScreen)
 	{
 		actionShow_Fullscreen->setText("Show Normal");
 	}
@@ -631,7 +632,7 @@ void CQtMainWindowMenuBar::onMenuHelpAboutToShow()
 
 	menuHelp->addSeparator();
 
-	QAction* actionDirectors_Cut_Subscription_Terms = new QAction("Director's Cut Subscription Terms", this);
+	QAction* actionDirectors_Cut_Subscription_Terms = new QAction(DIRECTORSCUT_PRODUCTNAME " Subscription Terms", this);
 	actionDirectors_Cut_Subscription_Terms->setDisabled(true);
 	menuHelp->addAction(actionDirectors_Cut_Subscription_Terms);
 
@@ -641,7 +642,7 @@ void CQtMainWindowMenuBar::onMenuHelpAboutToShow()
 
 	menuHelp->addSeparator();
 
-	QAction* actionAbout_Directors_Cut = new QAction("About Director's Cut [Pre-Alpha]", this);
+	QAction* actionAbout_Directors_Cut = new QAction("About " DIRECTORSCUT_PRODUCTNAME " [" DIRECTORSCUT_DEVELOPMENT_STAGE "]", this);
 	connect(actionAbout_Directors_Cut, &QAction::triggered, this, &CQtMainWindowMenuBar::onActionAboutDirectorsCutTriggered);
 	menuHelp->addAction(actionAbout_Directors_Cut);
 
@@ -653,13 +654,13 @@ void CQtMainWindowMenuBar::onMenuHelpAboutToShow()
 
 void CQtMainWindowMenuBar::onActionShowFullscreenTriggered(bool checked)
 {
-    CQtMainWindow* mainWindow = g_pDirectorsCutTool->GetMainWindow();
+    CQtMainWindow* mainWindow = g_pDirectorsCutTool->Qt()->GetMainWindow();
     mainWindow->setWindowState(mainWindow->windowState() ^ Qt::WindowFullScreen);
 }
 
 void CQtMainWindowMenuBar::onActionQuitTriggered(bool checked)
 {
-    g_pDirectorsCutTool->GetMainWindow()->close();
+    g_pDirectorsCutTool->Qt()->GetMainWindow()->close();
 }
 
 void CQtMainWindowMenuBar::onActionParticleEditorToolTriggered(bool checked)

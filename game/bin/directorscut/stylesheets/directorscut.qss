@@ -1,5 +1,4 @@
-/* Qt Stylesheet for Valve Qt Soverign applications - Dark Gray Background - YM */
-
+/* THIS NEEDS A LOT OF WORK!!! */
 
 QWidget
 {
@@ -1435,4 +1434,71 @@ QLineEdit[echoMode="2"]
 	lineedit-password-character: 9679;
 	}
 
+ads--CDockContainerWidget {
+	background: rgb(41, 41, 41);
+}
 
+ads--CDockContainerWidget > QSplitter {
+	padding: 1 0 1 0;
+}
+
+ads--CDockSplitter::handle {
+	background-color: palette(dark);
+}
+
+ads--CDockAreaWidget {
+	background: rgb(41, 41, 41);
+}
+
+ads--CDockAreaTitleBar {
+	background: rgb(41, 41, 41);
+	padding-bottom: 0px;
+}
+
+ads--CTitleBarButton {
+	padding: 0px 0px;
+}
+
+#dockAreaCloseButton {
+	qproperty-icon: url(tools:images/valve_style/tab-closebutton.png);
+	qproperty-iconSize: 16px;
+}
+
+#dockAreaCloseButton:hover {
+	qproperty-icon: url(tools:images/valve_style/tab-closebutton-hovered.png);
+}
+
+#dockAreaCloseButton:pressed {
+	qproperty-icon: url(tools:images/valve_style/tab-closebutton-selected.png);
+}
+#dockAreaCloseButton:hover:pressed {
+	qproperty-icon: url(tools:images/valve_style/tab-closebutton-selected-hovered.png);
+}
+
+ads--CDockWidgetTab {
+	/* width and height don't work? */
+	width: 132;
+	height: 28;
+   	image: url(tools:images/valve_style/tab-tab-deselected.png);
+	qproperty-iconSize: 16px 16px;
+}
+
+ads--CDockWidgetTab[activeTab="true"] {
+   	background-image: url(tools:images/valve_style/tab-selected.png);
+}
+
+ads--CDockWidgetTab QLabel {
+	color: rgb(182, 182, 182);
+}
+
+ads--CDockWidget {
+	background: rgb(41, 41, 41);
+	border-color: rgb(41, 41, 41);
+	border-style: solid;
+	border-width: 0 0 0 0;
+}
+
+QScrollArea#dockWidgetScrollArea {
+	padding: 0px;
+	border: none;
+}

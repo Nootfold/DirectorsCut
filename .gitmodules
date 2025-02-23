@@ -1,3 +1,6 @@
 [submodule "sdk"]
 	path = sdk
 	url = https://github.com/ValveSoftware/source-sdk-2013.git
+[submodule "src/thirdparty/lgpl/qt_advanced_docking_system"]
+	path = src/thirdparty/lgpl/qt_advanced_docking_system
+	url = https://github.com/githubuser0xFFFF/Qt-Advanced-Docking-System.git

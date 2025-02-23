@@ -1,6 +1,7 @@
 #include <QLabel>
 #include <QPushButton>
-#include "qt_aboutdialog.h"
+#include "qt/mainwindow/qt_aboutdialog.h"
+#include "directorscut.h"
 
 CQtAboutDialog::CQtAboutDialog(QWidget* pParent) : QDialog(pParent)
 {
@@ -9,7 +10,7 @@ CQtAboutDialog::CQtAboutDialog(QWidget* pParent) : QDialog(pParent)
 
     // will be autosized on x later
     setFixedSize(500, 115);
-    setWindowTitle("About Director's Cut [Pre-Alpha]");
+    setWindowTitle("About " DIRECTORSCUT_PRODUCTNAME " [" DIRECTORSCUT_DEVELOPMENT_STAGE "]");
     setModal(true);
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 
@@ -27,7 +28,7 @@ CQtAboutDialog::CQtAboutDialog(QWidget* pParent) : QDialog(pParent)
 
     // label (stretch to end with 11px padding)x64 at 89, 11
     QLabel* label2 = new QLabel(this);
-    label2->setText("<br><b>Version: 0.0.0.0 (pre-alpha)" "</b><br><br>Copyright by KiwifruitDev. All rights reserved.");
+    label2->setText("<br><b>Version: " DIRECTORSCUT_VERSION_STRING " (" DIRECTORSCUT_DEVELOPMENT_STAGE ")" "</b><br><br>Copyright by " DIRECTORSCUT_AUTHOR ". All rights reserved.");
     // fit label width to content
     int label2X = 92;
     int label2Width = 500 - label2X - 11;

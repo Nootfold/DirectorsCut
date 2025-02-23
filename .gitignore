@@ -507,12 +507,13 @@ FodyWeavers.xsd
 *.moc
 
 # Junctions
-/src/thirdparty/lgpl
+/src/thirdparty/lgpl/qt
 /src/devtools
 
 # Director's Cut
 !game/bin
 !game/bin/x64
+/src/lib
 
 # VS Code
 .vscode/

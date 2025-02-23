@@ -17,7 +17,7 @@ A community-driven filmmaking tool built on Source. A spiritual successor to **S
 The goal is to recreate **Source Filmmaker** and eventually release on **Steam**.
 
 ## Contributors
-Programming: [KiwifruitDev](https://github.com/KiwifruitDev), [ashifolfi](https://github.com/ashifolfi)
+Programming: [KiwifruitDev](https://github.com/KiwifruitDev), [Klaxon](https://github.com/theKlaxon), [ashifolfi](https://github.com/ashifolfi)
 
 Graphic Design: [FLARE145](https://flare145.com/)
 
@@ -25,6 +25,7 @@ Moderation: [Flynnyt03](https://github.com/flynnyt03), [nuppington](https://gith
 
 <div align="center">
   <a href="https://github.com/KiwifruitDev" title="KiwifruitDev (GitHub profile)"><img width="64px" alt="KiwifruitDev avatar" src="https://avatars.githubusercontent.com/u/25839651?v=4"></a>
+  <a href="https://github.com/theKlaxon" title="Klaxon (GitHub profile)"><img width="64px" alt="Klaxon avatar" src="https://avatars.githubusercontent.com/u/35210842?v=4"></a>
   <a href="https://github.com/ashifolfi" title="ashifolfi (GitHub profile)"><img width="64px" alt="ashifolfi avatar" src="https://avatars.githubusercontent.com/u/29577987?v=4"></a>
   <a href="https://flare145.com/" title="FLARE145 (flare145.com)"><img width="64px" alt="FLARE145 avatar" src="https://flare145.com/flarehost/flare145image.png"></a>
   <a href="https://github.com/flynnyt03" title="Flynnyt03 (GitHub profile)"><img width="64px" alt="Flynnyt03 avatar" src="https://avatars.githubusercontent.com/u/129870126?v=4"></a>
@@ -90,7 +91,7 @@ Additionally, Director's Cut shares code with the following repositories:
 - [Source-SDK-Resources/source-sdk-example-qt](https://github.com/Source-SDK-Resources/source-sdk-example-qt)
 - [Biohazard90/source-shader-editor](https://github.com/Biohazard90/source-shader-editor/)
 
-Director's Cut requires [Qt 5.15.2](https://www.qt.io/), which is licensed under [LGPLv3](https://www.qt.io/licensing/open-source-lgpl-obligations).
+Director's Cut requires [Qt 5.15.2](https://www.qt.io/) and [Qt Advanced Docking System](https://github.com/githubuser0xFFFF/Qt-Advanced-Docking-System), which are licensed under [LGPLv3](https://www.qt.io/licensing/open-source-lgpl-obligations).
 
 > [!NOTE]
 > Some portions of Director's Cut were contributed using [GitHub Copilot](https://copilot.github.com/).

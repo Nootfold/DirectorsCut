@@ -1,8 +1,13 @@
-#include <QDir>
-#include <QFile>
-#include <QMessageBox>
 #include <QString>
 #include "directorscut.h"
+
+// windows headers
+#undef INVALID_HANDLE_VALUE
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#undef PostMessage
+
+#include "materialsystem/materialsystem_config.h"
 
 CDirectorsCutTool* g_pDirectorsCutTool = nullptr;
 
@@ -12,7 +17,7 @@ CDirectorsCutTool::CDirectorsCutTool()
 
 const char *CDirectorsCutTool::GetToolName()
 {
-    return "Director's Cut";
+    return DIRECTORSCUT_PRODUCTNAME;
 }
 
 bool CDirectorsCutTool::Init()
@@ -22,51 +27,19 @@ bool CDirectorsCutTool::Init()
 
 bool CDirectorsCutTool::ClientInit(CreateInterfaceFn clientFactory)
 {
-    // Run on client init because we need to wait for engine to be initialized
-
-    // Initialize library and search paths
-    #ifdef PLATFORM_64BITS
-    QString libraryPath = "bin/directorscut/x64";
-    #else
-    QString libraryPath = "bin/directorscut";
-    #endif
-    QCoreApplication::addLibraryPath(libraryPath);
-    QString searchPath = "bin/directorscut";
-    QDir::addSearchPath("tools", searchPath);
-
-    // Create application
-    int argc = 0;
-    m_pApplication = new QApplication(argc, nullptr);
-    QFile file("tools:stylesheets/directorscut.qss");
-    if (file.open(QFile::ReadOnly)) {
-        QString styleSheet = QLatin1String(file.readAll());
-        m_pApplication->setStyleSheet(styleSheet);
-    } else {
-        // User-friendly error message
-        QMessageBox::critical(nullptr, "Error", "Failed to load stylesheet. Director's Cut will use the default Qt stylesheet.");
-    }
-
-    // Create main window
-    m_pMainWindow = new CQtMainWindow(nullptr);
-    m_pMainWindow->populateMenus();
+    // Initialize Qt (we waited for engine to be initialized first)
+    m_pQt = new CDirectorsCutQt();
     return true;
 }
 
 void CDirectorsCutTool::Shutdown()
 {
-    // Destroy members and shut down Qt
     SetToolActive(false);
-    if (m_pMainWindow)
+   // Delete Qt handler
+    if (m_pQt)
     {
-        m_pMainWindow->close();
-        delete m_pMainWindow;
-        m_pMainWindow = nullptr;
-    }
-    if (m_pApplication)
-    {
-        m_pApplication->quit();
-        delete m_pApplication;
-        m_pApplication = nullptr;
+        delete m_pQt;
+        m_pQt = nullptr;
     }
 }
 
@@ -92,10 +65,13 @@ void CDirectorsCutTool::ClientShutdown()
 {
 }
 
-bool CDirectorsCutTool::CanQuit() {
+bool CDirectorsCutTool::CanQuit()
+{
     // TODO: Ask to save session document once implemented
-    // Only allow the tool to quit if no modal dialogs are open
-    return QApplication::activeModalWidget() == nullptr;
+    // Ask Qt handler if we can quit
+    if (m_pQt)
+        return m_pQt->CanQuit();
+    return true;
 }
 
 void CDirectorsCutTool::PostMessage(HTOOLHANDLE hEntity, KeyValues* message)
@@ -249,56 +225,71 @@ void CDirectorsCutTool::VGui_PostSimulate()
 
 // ===== Our own methods =====
 
-CQtMainWindow* CDirectorsCutTool::GetMainWindow()
+CDirectorsCutQt* CDirectorsCutTool::Qt()
 {
-    return m_pMainWindow;
+    return m_pQt;
 }
 
 void CDirectorsCutTool::SetToolActive(bool active)
 {
     engine->ClientCmd_Unrestricted("stopsound");
 
-    bIsToolActive = active;
+    m_bIsToolActive = active;
 
     // show or hide game window
     HideOrShowEngineWindow(active);
+    
+    // Toggle gameui
+    if(active) engine->ClientCmd_Unrestricted("gameui_activate");
+    else engine->ClientCmd_Unrestricted("gameui_hide");
 
-    if(active)
-    {
-        engine->ClientCmd_Unrestricted("gameui_activate");
-        m_pMainWindow->show();
-        m_pMainWindow->activateWindow();
-    }
-    else
-    {
-        engine->ClientCmd_Unrestricted("gameui_hide");
-        m_pMainWindow->hide();
-    }
+    // Toggle main window
+    if (m_pQt) m_pQt->SetMainWindowVisible(active);
 }
 
 void CDirectorsCutTool::ToggleTool()
 {
-    SetToolActive(!bIsToolActive);
+    SetToolActive(!m_bIsToolActive);
 }
 
 bool CDirectorsCutTool::IsToolActive()
 {
-    return bIsToolActive;
+    return m_bIsToolActive;
 }
 
 bool CDirectorsCutTool::GetShouldHideEngineWindow()
 {
-    return bShouldHideEngineWindow;
+    return m_bShouldHideEngineWindow;
 }
 
 void CDirectorsCutTool::SetShouldHideEngineWindow(bool hide)
 {
-    bShouldHideEngineWindow = hide;
+    m_bShouldHideEngineWindow = hide;
 }
 
 void CDirectorsCutTool::HideOrShowEngineWindow(bool hide)
 {
-    if(!bShouldHideEngineWindow)
-        hide = false;
-    bIsWindowHidden = hide;
+    m_bIsWindowHidden = !m_bShouldHideEngineWindow && hide;
+}
+
+void* CDirectorsCutTool::GetEngineWindowHandle()
+{
+    // FIXME: Don't use windows api and don't try to find a window
+    // There can be multiple instances of the engine running
+    // set hwnd to the engine window handle
+    if (pHWND == (void*)0xFFEEFFEE)
+    {
+        HWND hwnd = FindWindowA("Valve001", NULL);
+        pHWND = (void*)hwnd;
+    }
+    return pHWND;
+}
+
+void CDirectorsCutTool::FocusEngineWindow()
+{
+    HWND hwnd = (HWND)GetEngineWindowHandle();
+    if (hwnd)
+    {
+        SetForegroundWindow(hwnd);
+    }
 }

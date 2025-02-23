@@ -1,6 +1,5 @@
 #pragma once
 
-#include <QtWidgets/QAction>
 #include <QtWidgets/QMenu>
 #include <QtWidgets/QMenuBar>
 #include "qt_aboutdialog.h"
