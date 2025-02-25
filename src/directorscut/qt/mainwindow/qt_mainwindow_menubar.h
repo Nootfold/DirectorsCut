@@ -3,14 +3,19 @@
 #include <QtWidgets/QMenu>
 #include <QtWidgets/QMenuBar>
 #include "qt_aboutdialog.h"
+#include "DockWidget.h"
+#include "DockAreaWidget.h"
+
+using namespace ads;
 
 class CQtMainWindowMenuBar : public QMenuBar
 {
 	Q_OBJECT
 public:
 	CQtMainWindowMenuBar(QWidget* pParent);
-	void populateMenus();
+	void PopulateMenus();
 private slots:
+	void AddWindowActions(QList<CDockWidget*> dockWidgets, QList<QAction*> actionList);
 	// Menu dynamic population
 	void onMenuFileAboutToShow();
 	void onMenuEditAboutToShow();

@@ -1,8 +1,13 @@
+// This file is used to implement the Qt MOC preprocessor for Qt Advanced Docking System classes.
+// There is no way to automatically run MOC while using VPC project definitions.
+
+// ADS resources aren't necessary becuase we use a custom style sheet
 int __cdecl qInitResources_ads(void)
 {
     return 0;
 }
 
+// Include generated MOC files (see qt_advanced_docking_system.vpc)
 #include "ads_globals.h.moc"
 #include "AutoHideDockContainer.h.moc"
 #include "AutoHideSideBar.h.moc"

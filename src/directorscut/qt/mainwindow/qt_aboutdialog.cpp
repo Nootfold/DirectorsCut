@@ -28,7 +28,10 @@ CQtAboutDialog::CQtAboutDialog(QWidget* pParent) : QDialog(pParent)
 
     // label (stretch to end with 11px padding)x64 at 89, 11
     QLabel* label2 = new QLabel(this);
-    label2->setText("<br><b>Version: " DIRECTORSCUT_VERSION_STRING " (" DIRECTORSCUT_DEVELOPMENT_STAGE ")" "</b><br><br>Copyright by " DIRECTORSCUT_AUTHOR ". All rights reserved.");
+    label2->setText(QString("<br><b>Version: %1.%2.%3.%4 (%5)" "</b><br><br>Copyright by %6. All rights reserved.")
+        .arg(DIRECTORSCUT_VERSION_MAJOR).arg(DIRECTORSCUT_VERSION_MINOR).arg(DIRECTORSCUT_VERSION_PATCH).arg(DIRECTORSCUT_VERSION_BUILD)
+        .arg(QString(DIRECTORSCUT_DEVELOPMENT_STAGE).toLower())
+        .arg(DIRECTORSCUT_AUTHOR));
     // fit label width to content
     int label2X = 92;
     int label2Width = 500 - label2X - 11;

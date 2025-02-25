@@ -49,7 +49,7 @@ CQtMainWindowMenuBar::CQtMainWindowMenuBar(QWidget* pParent) : QMenuBar(pParent)
 	addAction(menuHelp->menuAction());
 }
 
-void CQtMainWindowMenuBar::populateMenus()
+void CQtMainWindowMenuBar::PopulateMenus()
 {
 	// Initialize default menu items (ensures shortcuts are available)
 	onMenuFileAboutToShow();
@@ -58,6 +58,17 @@ void CQtMainWindowMenuBar::populateMenus()
 	onMenuViewAboutToShow();
 	onMenuScriptsAboutToShow();
 	onMenuHelpAboutToShow();
+}
+
+void CQtMainWindowMenuBar::AddWindowActions(QList<CDockWidget*> dockWidgets, QList<QAction*> actionList)
+{
+	for (int k = 0; k < dockWidgets.size(); k++)
+	{
+		CDockWidget* pDockWidget = dockWidgets.at(k);
+		if(pDockWidget == nullptr)
+			continue;
+		actionList.append(pDockWidget->toggleViewAction());
+	}
 }
 
 void CQtMainWindowMenuBar::onMenuFileAboutToShow()
@@ -378,6 +389,30 @@ void CQtMainWindowMenuBar::onMenuWindowsAboutToShow()
 {
 	menuWindows->clear();
 
+	// FIXME: yikes, three for loops
+	QList<QAction*> actionList;
+	CDockManager* pDockManager = g_pDirectorsCutTool->Qt()->GetMainWindow()->GetDockManager();
+	for (int i = 0; i < pDockManager->dockAreaCount(); i++)
+	{
+		CDockAreaWidget* pDockAreaWidget = pDockManager->dockArea(i);
+		if(pDockAreaWidget == nullptr)
+			continue;
+		AddWindowActions(pDockAreaWidget->dockWidgets(), actionList);
+	}
+	QList<CFloatingDockContainer*> floatingWidgets = pDockManager->floatingWidgets();
+	for (int i = 0; i < floatingWidgets.size(); i++)
+	{
+		CFloatingDockContainer* pFloatingWidget = floatingWidgets[i];
+		if(pFloatingWidget == nullptr)
+			continue;
+		AddWindowActions(pFloatingWidget->dockWidgets(), actionList);
+	}
+	for (int i = 0; i < actionList.size(); i++)
+	{
+		menuWindows->addAction(actionList[i]);
+	}
+
+	/*
 	QAction* actionElement_Viewer = new QAction("Element Viewer", this);
 	actionElement_Viewer->setShortcut(QKeySequence::fromString("F9"));
 	actionElement_Viewer->setDisabled(true);
@@ -427,6 +462,7 @@ void CQtMainWindowMenuBar::onMenuWindowsAboutToShow()
 	QAction* actionHistory = new QAction("History", this);
 	actionHistory->setDisabled(true);
 	menuWindows->addAction(actionHistory);
+	*/
 
 	menuWindows->addSeparator();
 

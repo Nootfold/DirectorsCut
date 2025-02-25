@@ -29,6 +29,7 @@ bool CDirectorsCutTool::ClientInit(CreateInterfaceFn clientFactory)
 {
     // Initialize Qt (we waited for engine to be initialized first)
     m_pQt = new CDirectorsCutQt();
+    m_pQt->GetMainWindow()->PostInit();
     return true;
 }
 
@@ -270,6 +271,8 @@ void CDirectorsCutTool::SetShouldHideEngineWindow(bool hide)
 void CDirectorsCutTool::HideOrShowEngineWindow(bool hide)
 {
     m_bIsWindowHidden = !m_bShouldHideEngineWindow && hide;
+    if (!m_bIsWindowHidden)
+        FocusEngineWindow();
 }
 
 void* CDirectorsCutTool::GetEngineWindowHandle()

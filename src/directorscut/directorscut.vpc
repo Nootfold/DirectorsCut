@@ -35,6 +35,56 @@ $Project "directorscut"
 {
 	$Folder	"Qt UI Files"
 	{
+        $Folder "Dock Widgets"
+		{
+			$File "qt/dockwidgets/qt_all_dockwidgets.h"
+			$File "qt/dockwidgets/qt_all_dockwidgets.cpp"
+
+			$File "qt/dockwidgets/qt_dockwidget_animationseteditor.h"
+			$File "qt/dockwidgets/qt_dockwidget_animationseteditor.cpp"
+			$DynamicFile "qt/dockwidgets/qt_dockwidget_animationseteditor.h.moc"
+
+			$File "qt/dockwidgets/qt_dockwidget_console.h"
+			$File "qt/dockwidgets/qt_dockwidget_console.cpp"
+			$DynamicFile "qt/dockwidgets/qt_dockwidget_console.h.moc"
+
+			$File "qt/dockwidgets/qt_dockwidget.h"
+			$File "qt/dockwidgets/qt_dockwidget.cpp"
+			$DynamicFile "qt/dockwidgets/qt_dockwidget.h.moc"
+
+			$File "qt/dockwidgets/qt_dockwidget_elementviewer.h"
+			$File "qt/dockwidgets/qt_dockwidget_elementviewer.cpp"
+			$DynamicFile "qt/dockwidgets/qt_dockwidget_elementviewer.h.moc"
+
+			$File "qt/dockwidgets/qt_dockwidget_history.h"
+			$File "qt/dockwidgets/qt_dockwidget_history.cpp"
+			$DynamicFile "qt/dockwidgets/qt_dockwidget_history.h.moc"
+
+			$File "qt/dockwidgets/qt_dockwidget_keyboardshortcuts.h"
+			$File "qt/dockwidgets/qt_dockwidget_keyboardshortcuts.cpp"
+			$DynamicFile "qt/dockwidgets/qt_dockwidget_keyboardshortcuts.h.moc"
+
+			$File "qt/dockwidgets/qt_dockwidget_screencast.h"
+			$File "qt/dockwidgets/qt_dockwidget_screencast.cpp"
+			$DynamicFile "qt/dockwidgets/qt_dockwidget_screencast.h.moc"
+
+			$File "qt/dockwidgets/qt_dockwidget_screencastslides.h"
+			$File "qt/dockwidgets/qt_dockwidget_screencastslides.cpp"
+			$DynamicFile "qt/dockwidgets/qt_dockwidget_screencastslides.h.moc"
+
+			$File "qt/dockwidgets/qt_dockwidget_scripteditor.h"
+			$File "qt/dockwidgets/qt_dockwidget_scripteditor.cpp"
+			$DynamicFile "qt/dockwidgets/qt_dockwidget_scripteditor.h.moc"
+
+            $File "qt/dockwidgets/qt_dockwidget_timeline.h"
+            $File "qt/dockwidgets/qt_dockwidget_timeline.cpp"
+            $DynamicFile "qt/dockwidgets/qt_dockwidget_timeline.h.moc"
+
+			$File "qt/dockwidgets/qt_dockwidget_viewport.h"
+			$File "qt/dockwidgets/qt_dockwidget_viewport.cpp"
+			$DynamicFile "qt/dockwidgets/qt_dockwidget_viewport.h.moc"
+        }
+
 		$Folder "Main Window"
 		{
 			$File "qt/mainwindow/qt_aboutdialog.h"

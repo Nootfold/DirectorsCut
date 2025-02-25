@@ -3,6 +3,7 @@
 #include <QMessageBox>
 #include "directorscut.h"
 
+// This handles Qt outside of the main class
 CDirectorsCutQt::CDirectorsCutQt()
 {
 	Msg("Initialising Qt5\n");
@@ -29,7 +30,7 @@ CDirectorsCutQt::CDirectorsCutQt()
         m_pApplication->setStyleSheet(styleSheet);
     } else {
         // User-friendly error message
-        QMessageBox::critical(nullptr, "Error", "Failed to load stylesheet. " DIRECTORSCUT_PRODUCTNAME " will use the default Qt stylesheet.");
+        QMessageBox::critical(nullptr, "Error", QString("Failed to load stylesheet. %1 will use the default Qt stylesheet.").arg(DIRECTORSCUT_PRODUCTNAME));
     }
     
 	// we MUST close the app after the home window is gone,

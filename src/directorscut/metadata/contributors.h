@@ -6,6 +6,8 @@ struct DirectorsCut_Contributor {
     const char* url;
 };
 
+// The contributors listed in README.md should be replicated here.
+// Used to display the contributors in the "About" window.
 static const DirectorsCut_Contributor DirectorsCut_Contributors[] = {
     {"KiwifruitDev", "Programming", "https://github.com/KiwifruitDev"},
     {"Klaxon", "Programming", "https://github.com/theKlaxon"},

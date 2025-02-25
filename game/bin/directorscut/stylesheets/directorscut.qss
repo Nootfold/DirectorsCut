@@ -66,10 +66,13 @@ QMenuBar
 		stop: 1 #464D60 );
 	border-image: none;
 	border-style: none;
-	border-width: 2px;
+	border-width: 0px;
 	border-bottom-style: solid;
 	border-bottom-color: rgb(20, 20, 20, 50%);
-	padding: 3px;
+	padding-top: 2px;
+	padding-bottom: 1px;
+	padding-left: 3px;
+	padding-right: 3px;
 	}
 
 QMenuBar::item
@@ -1365,8 +1368,8 @@ QSplitter
 	background-color: rgb( 24, 24, 25 );
 	margin: 0px;
 	border: 0px;
-	width: 6px;
-	height: 6px;
+	width: 8px;
+	height: 8px;
 }
 
 QSplitter::handle:horizontal {
@@ -1443,7 +1446,7 @@ ads--CDockContainerWidget > QSplitter {
 }
 
 ads--CDockSplitter::handle {
-	background-color: palette(dark);
+	background-color: rgb( 38, 38, 39 );
 }
 
 ads--CDockAreaWidget {
@@ -1452,7 +1455,9 @@ ads--CDockAreaWidget {
 
 ads--CDockAreaTitleBar {
 	background: rgb(41, 41, 41);
+	padding-top: 5px;
 	padding-bottom: 0px;
+	padding-left: 0px;
 }
 
 ads--CTitleBarButton {
@@ -1476,15 +1481,43 @@ ads--CTitleBarButton {
 }
 
 ads--CDockWidgetTab {
-	/* width and height don't work? */
-	width: 132;
-	height: 28;
-   	image: url(tools:images/valve_style/tab-tab-deselected.png);
+	padding: 8px 8px 5px 8px;
+	/*background: rgb(45, 45, 45);*/
+	/* gradient: down rgb(32, 31, 31) -> up rgb(52, 50, 49) */
+	background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+		stop: 0 rgb(52, 50, 49),
+		stop: 1 rgb(32, 31, 31));
+	border-top-left-radius: 4px;
+	border-top-right-radius: 4px;
+	border: 1px solid qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+		stop: 0 rgb(68, 68, 68),
+		stop: 1 rgb(90, 89, 89));
+	border-width: 1px 1px 0 1px;
 	qproperty-iconSize: 16px 16px;
+	margin-left: 4px;
+	margin-right: 4px;
+}
+
+ads--CDockAreaTabBar {
+	background: rgb(41, 41, 41);
+}
+
+ads--CDockAreaTitleBar {
+	background: rgb(41, 41, 41);
 }
 
 ads--CDockWidgetTab[activeTab="true"] {
-   	background-image: url(tools:images/valve_style/tab-selected.png);
+	/*background: rgb(69, 67, 66);*/
+	/* gradient: down rgb(55, 55, 55) -> up rgb(69, 67, 66) */
+	background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+		stop: 0 rgb(69, 67, 66),
+		stop: 1 rgb(55, 55, 55));
+	border-top-left-radius: 4px;
+	border-top-right-radius: 4px;
+	border: 1px solid qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+		stop: 0 rgb(68, 68, 68),
+		stop: 1 rgb(105, 103, 102));
+	border-width: 1px 1px 0 1px;
 }
 
 ads--CDockWidgetTab QLabel {
@@ -1496,6 +1529,15 @@ ads--CDockWidget {
 	border-color: rgb(41, 41, 41);
 	border-style: solid;
 	border-width: 0 0 0 0;
+}
+
+ads--CDockAreaWidget {
+	border-color: rgb(54, 54, 54);
+	border-style: solid;
+	border-top-width: 1px;
+	border-bottom-width: 2px;
+	border-left-width: 3px; /* 6px? */
+	border-right-width: 3px;
 }
 
 QScrollArea#dockWidgetScrollArea {

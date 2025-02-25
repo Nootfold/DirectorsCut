@@ -2,6 +2,8 @@
 #include "directorscut.h"
 #include "qt_mainwindow_menubar.h"
 #include "qt_mainwindow.h"
+#include "dockwidgets/qt_all_dockwidgets.h"
+#include "DockAreaWidget.h"
 
 CQtMainWindow::CQtMainWindow(QWidget* pParent) : QMainWindow(pParent)
 {
@@ -9,7 +11,7 @@ CQtMainWindow::CQtMainWindow(QWidget* pParent) : QMainWindow(pParent)
 	QIcon icon;
 	icon.addFile("tools:/images/directorscut/directorscut_app.png", QSize(), QIcon::Normal, QIcon::Off);
 	setWindowIcon(icon);
-	setWindowTitle("Director's Cut [Pre-Alpha]");
+	setWindowTitle(QString("%1 [%2]").arg(DIRECTORSCUT_PRODUCTNAME, DIRECTORSCUT_DEVELOPMENT_STAGE));
 	resize(1344, 801);
 
 	// Add menu bar and populate it
@@ -34,39 +36,83 @@ CQtMainWindow::CQtMainWindow(QWidget* pParent) : QMainWindow(pParent)
 	m_pDockManager = new CDockManager(this);
 	//m_pDockManager = new QWidget(this);
 	setCentralWidget(m_pDockManager);
-	
-	QLabel* l = new QLabel();
-	l->setWordWrap(true);
-	l->setAlignment(Qt::AlignTop | Qt::AlignLeft);
-	l->setText("Lorem ipsum dolor sit amet, consectetuer adipiscing elit. ");
-	ads::CDockWidget* DockWidget = new ads::CDockWidget("Label 1");
-	DockWidget->setWidget(l);
-	m_pMenuBar->addAction(DockWidget->toggleViewAction());
-	m_pDockManager->addDockWidget(ads::TopDockWidgetArea, DockWidget);
-	
-	QLabel* l2 = new QLabel();
-	l2->setWordWrap(true);
-	l2->setAlignment(Qt::AlignTop | Qt::AlignLeft);
-	l2->setText("Label 2! ");
-	ads::CDockWidget* DockWidget2 = new ads::CDockWidget("Label 2");
-	DockWidget2->setWidget(l2);
-	m_pMenuBar->addAction(DockWidget2->toggleViewAction());
-	m_pDockManager->addDockWidget(ads::TopDockWidgetArea, DockWidget2);
-	
-	QLabel* l3 = new QLabel();
-	l3->setWordWrap(true);
-	l3->setAlignment(Qt::AlignTop | Qt::AlignLeft);
-	l3->setText("Label 3! ");
-	ads::CDockWidget* DockWidget3 = new ads::CDockWidget("Label 3");
-	DockWidget3->setWidget(l3);
-	m_pMenuBar->addAction(DockWidget3->toggleViewAction());
-	m_pDockManager->addDockWidget(ads::TopDockWidgetArea, DockWidget3);
 }
 
-void CQtMainWindow::populateMenus()
+void CQtMainWindow::PostInit()
 {
-	// Pass-through to menu bar
-	m_pMenuBar->populateMenus();
+	// TODO: Use a macro or something so that each tab is
+	// added dynamically and not hardcoded like this
+
+	// Create dock widgets
+    CQtDockWidget* pAnimationSetEditor = new CQtDockWidget_AnimationSetEditor();
+    CQtDockWidget* pConsole = new CQtDockWidget_Console();
+    CQtDockWidget* pElementViewer = new CQtDockWidget_ElementViewer();
+    CQtDockWidget* pHistory = new CQtDockWidget_History();
+    CQtDockWidget* pKeyboardShortcuts = new CQtDockWidget_KeyboardShortcuts();
+    CQtDockWidget* pScreencast = new CQtDockWidget_Screencast();
+    CQtDockWidget* pScreencastSlides = new CQtDockWidget_ScreencastSlides();
+    CQtDockWidget* pScriptEditor = new CQtDockWidget_ScriptEditor();
+    CQtDockWidget* pTimeline = new CQtDockWidget_Timeline();
+    CQtDockWidget* pPrimaryViewport = new CQtDockWidget_Viewport(0);
+    CQtDockWidget* pSecondaryViewport = new CQtDockWidget_Viewport(1);
+
+	// Left side
+	CDockWidget* pDockWidget_AnimationSetEditor = new CDockWidget(pAnimationSetEditor->GetTitle());
+	pDockWidget_AnimationSetEditor->setWidget(pAnimationSetEditor);
+	CDockAreaWidget* pLeftArea = m_pDockManager->addDockWidget(LeftDockWidgetArea, pDockWidget_AnimationSetEditor);
+	CDockWidget* pDockWidget_ElementViewer = new CDockWidget(pElementViewer->GetTitle());
+	pDockWidget_ElementViewer->setWidget(pElementViewer);
+	m_pDockManager->addDockWidget(CenterDockWidgetArea, pDockWidget_ElementViewer, pLeftArea);
+	pLeftArea->setCurrentIndex(0);
+
+	// Top right side (large area)
+	CDockWidget* pDockWidget_PrimaryViewport = new CDockWidget(pPrimaryViewport->GetTitle());
+	pDockWidget_PrimaryViewport->setWidget(pPrimaryViewport);
+	CDockAreaWidget* pTopRightArea = m_pDockManager->addDockWidget(RightDockWidgetArea, pDockWidget_PrimaryViewport);
+	CDockWidget* pDockWidget_Console = new CDockWidget(pConsole->GetTitle());
+	pDockWidget_Console->setWidget(pConsole);
+	m_pDockManager->addDockWidget(CenterDockWidgetArea, pDockWidget_Console, pTopRightArea);
+	m_pDockManager->setCentralWidget(pDockWidget_PrimaryViewport);
+	pTopRightArea->setCurrentIndex(0);
+
+	// Bottom right side
+	CDockWidget* pDockWidget_Timeline = new CDockWidget(pTimeline->GetTitle());
+	pDockWidget_Timeline->setWidget(pTimeline);
+	m_pDockManager->addDockWidget(BottomDockWidgetArea, pDockWidget_Timeline, pTopRightArea);
+
+	// Floating (hidden by default, can be toggled back on in the windows menu)
+	CDockWidget* pDockWidget_History = new CDockWidget(pHistory->GetTitle());
+	pDockWidget_History->setWidget(pHistory);
+	m_pDockManager->addDockWidgetFloating(pDockWidget_History);
+	pDockWidget_History->toggleView(false);
+	CDockWidget* pDockWidget_KeyboardShortcuts = new CDockWidget(pKeyboardShortcuts->GetTitle());
+	pDockWidget_KeyboardShortcuts->setWidget(pKeyboardShortcuts);
+	m_pDockManager->addDockWidgetFloating(pDockWidget_KeyboardShortcuts);
+	pDockWidget_KeyboardShortcuts->toggleView(false);
+	CDockWidget* pDockWidget_Screencast = new CDockWidget(pScreencast->GetTitle());
+	pDockWidget_Screencast->setWidget(pScreencast);
+	m_pDockManager->addDockWidgetFloating(pDockWidget_Screencast);
+	pDockWidget_Screencast->toggleView(false);
+	CDockWidget* pDockWidget_ScreencastSlides = new CDockWidget(pScreencastSlides->GetTitle());
+	pDockWidget_ScreencastSlides->setWidget(pScreencastSlides);
+	m_pDockManager->addDockWidgetFloating(pDockWidget_ScreencastSlides);
+	pDockWidget_ScreencastSlides->toggleView(false);
+	CDockWidget* pDockWidget_ScriptEditor = new CDockWidget(pScriptEditor->GetTitle());
+	pDockWidget_ScriptEditor->setWidget(pScriptEditor);
+	m_pDockManager->addDockWidgetFloating(pDockWidget_ScriptEditor);
+	pDockWidget_ScriptEditor->toggleView(false);
+	CDockWidget* pDockWidget_SecondaryViewport = new CDockWidget(pSecondaryViewport->GetTitle());
+	pDockWidget_SecondaryViewport->setWidget(pSecondaryViewport);
+	m_pDockManager->addDockWidgetFloating(pDockWidget_SecondaryViewport);
+	pDockWidget_SecondaryViewport->toggleView(false);
+
+	// Deallocate temporary dock widgets
+	m_pMenuBar->PopulateMenus();
+}
+
+CDockManager* CQtMainWindow::GetDockManager()
+{
+	return m_pDockManager;
 }
 
 void CQtMainWindow::closeEvent(QCloseEvent* event)
