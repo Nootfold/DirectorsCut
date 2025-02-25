@@ -75,6 +75,7 @@ public:
     void HideOrShowEngineWindow(bool hide);
     void* GetEngineWindowHandle();
     void FocusEngineWindow();
+    void ResetEngineView();
 protected:
     CDirectorsCutQt* m_pQt = nullptr;
 
@@ -83,6 +84,8 @@ protected:
     bool m_bIsWindowHidden = false;
     
     void* pHWND = (void*)0xFFEEFFEE; // HWND, windows.h isn't included here
+
+    bool m_bMatSysWindowRegistered = false;
 };
 
 extern CDirectorsCutTool* g_pDirectorsCutTool;

@@ -48,10 +48,6 @@ $Project "directorscut"
 			$File "qt/dockwidgets/qt_dockwidget_console.cpp"
 			$DynamicFile "qt/dockwidgets/qt_dockwidget_console.h.moc"
 
-			$File "qt/dockwidgets/qt_dockwidget.h"
-			$File "qt/dockwidgets/qt_dockwidget.cpp"
-			$DynamicFile "qt/dockwidgets/qt_dockwidget.h.moc"
-
 			$File "qt/dockwidgets/qt_dockwidget_elementviewer.h"
 			$File "qt/dockwidgets/qt_dockwidget_elementviewer.cpp"
 			$DynamicFile "qt/dockwidgets/qt_dockwidget_elementviewer.h.moc"
@@ -83,6 +79,10 @@ $Project "directorscut"
 			$File "qt/dockwidgets/qt_dockwidget_viewport.h"
 			$File "qt/dockwidgets/qt_dockwidget_viewport.cpp"
 			$DynamicFile "qt/dockwidgets/qt_dockwidget_viewport.h.moc"
+
+			$File "qt/dockwidgets/qt_dockwidget.h"
+			$File "qt/dockwidgets/qt_dockwidget.cpp"
+			$DynamicFile "qt/dockwidgets/qt_dockwidget.h.moc"
         }
 
 		$Folder "Main Window"
@@ -99,9 +99,17 @@ $Project "directorscut"
 			$File "qt/mainwindow/qt_mainwindow.cpp"
 			$DynamicFile "qt/mainwindow/qt_mainwindow.h.moc"
 		}
-	
+
 		$File "qt/directorscut_qt.h"
 		$File "qt/directorscut_qt.cpp"
+
+		$File "qt/qt_matsyswindow.cpp"
+		$File "qt/qt_matsyswindow.h"
+		$DynamicFile "qt/qt_matsyswindow.h.moc"
+
+		$File "qt/qt_viewport.cpp"
+		$File "qt/qt_viewport.h"
+		$DynamicFile "qt/qt_viewport.h.moc"
 	}
 
     $Folder "Source Files"

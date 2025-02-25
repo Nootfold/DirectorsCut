@@ -1,6 +1,7 @@
 #include <QDir>
 #include <QFile>
 #include <QMessageBox>
+#include <qpa/qplatformwindow.h>
 #include "directorscut.h"
 
 // This handles Qt outside of the main class
@@ -88,4 +89,36 @@ bool CDirectorsCutQt::CanQuit()
 {
     // Only allow the tool to quit if no modal dialogs are open
     return QApplication::activeModalWidget() == nullptr;
+}
+
+void CDirectorsCutQt::AddManagedView(CQtMatSysWindow* pView)
+{
+    if (pView)
+    {
+        m_vecManagedViews.AddToTail(pView);
+    }
+}
+
+void CDirectorsCutQt::RemoveManagedView(CQtMatSysWindow* pView)
+{
+    if (pView)
+    {
+        m_vecManagedViews.FindAndRemove(pView);
+    }
+}
+
+void CDirectorsCutQt::DrawManagedViews()
+{
+	QApplication::processEvents();
+    for (int i = 0; i < m_vecManagedViews.Count(); i++)
+    {
+        // No handle, no service
+        QPlatformWindow* pWindowHandle = m_vecManagedViews[i]->handle();
+        if (!pWindowHandle)
+            return;
+        // Tell matsys we want to draw to this window
+        g_pMaterialSystem->SetView((void*)pWindowHandle->winId());
+        m_vecManagedViews[i]->paint();
+        g_pDirectorsCutTool->ResetEngineView();
+    }
 }

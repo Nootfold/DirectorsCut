@@ -52,6 +52,7 @@ void CDirectorsCutTool::OnToolActivate()
 void CDirectorsCutTool::OnToolDeactivate()
 {
     SetToolActive(false);
+    FocusEngineWindow();
 }
 
 bool CDirectorsCutTool::ServerInit(CreateInterfaceFn serverFactory) {
@@ -194,6 +195,10 @@ bool CDirectorsCutTool::GetSoundSpatialization(int iUserData, int guid, Spatiali
 
 void CDirectorsCutTool::RenderFrameBegin()
 {
+    if (m_bIsToolActive && m_pQt && m_pQt->IsMainWindowVisible())
+    {
+        m_pQt->DrawManagedViews();
+    }
 }
 
 void CDirectorsCutTool::RenderFrameEnd()
@@ -236,15 +241,20 @@ void CDirectorsCutTool::SetToolActive(bool active)
     engine->ClientCmd_Unrestricted("stopsound");
 
     m_bIsToolActive = active;
-
-    // show or hide game window
-    HideOrShowEngineWindow(active);
     
     // Toggle gameui
-    if(active) engine->ClientCmd_Unrestricted("gameui_activate");
-    else engine->ClientCmd_Unrestricted("gameui_hide");
-
+    if(active)
+    {
+        // Render to the engine window
+        engine->ClientCmd_Unrestricted("gameui_activate");
+    }
+    else
+    {
+        engine->ClientCmd_Unrestricted("gameui_hide");
+    }
+    
     // Toggle main window
+    HideOrShowEngineWindow(active);
     if (m_pQt) m_pQt->SetMainWindowVisible(active);
 }
 
@@ -270,9 +280,11 @@ void CDirectorsCutTool::SetShouldHideEngineWindow(bool hide)
 
 void CDirectorsCutTool::HideOrShowEngineWindow(bool hide)
 {
-    m_bIsWindowHidden = !m_bShouldHideEngineWindow && hide;
-    if (!m_bIsWindowHidden)
-        FocusEngineWindow();
+    if (!m_bShouldHideEngineWindow)
+        hide = false;
+    HWND hwnd = (HWND)GetEngineWindowHandle();
+    ShowWindow(hwnd, hide ? SW_HIDE : SW_SHOW);
+    m_bIsWindowHidden = hide;
 }
 
 void* CDirectorsCutTool::GetEngineWindowHandle()
@@ -295,4 +307,10 @@ void CDirectorsCutTool::FocusEngineWindow()
     {
         SetForegroundWindow(hwnd);
     }
+}
+
+void CDirectorsCutTool::ResetEngineView()
+{
+    // Reset engine view
+    g_pMaterialSystem->SetView(GetEngineWindowHandle());
 }
